@@ -1,0 +1,47 @@
+buildscript {
+  ext.versions = [
+    kotlin: '1.1.1'
+  ]
+
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE'
+  }
+}
+
+plugins {
+  id 'org.jetbrains.kotlin.jvm' version '1.1.1'
+}
+apply plugin: 'org.springframework.boot'
+
+jar {
+  baseName = 'dius-mentor_boris_coffee-api'
+  version = '0.1.0'
+}
+
+repositories {
+  mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+springBoot {
+  mainClass = 'au.dius.com.coffee.ApplicationKt'
+}
+
+dependencies {
+  compile "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+
+  compile 'org.springframework.boot:spring-boot-starter-web', {
+    exclude module: 'spring-boot-starter-tomcat'
+  }
+  compile 'org.springframework.boot:spring-boot-starter-jetty'
+  compile 'org.springframework.boot:spring-boot-starter-actuator'
+
+  testCompile 'junit:junit'
+  testCompile "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}"
+  testCompile 'org.springframework.boot:spring-boot-starter-test'
+}
