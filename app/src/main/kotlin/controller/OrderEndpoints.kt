@@ -1,31 +1,51 @@
-package au.dius.com.coffee.controller
+package au.com.dius.coffee.controller
 
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.RequestMethod.*
 
-import au.dius.com.coffee.dto.*
+import au.com.dius.coffee.dto.*
+import au.com.dius.coffee.model.CoffeeOrder
+import au.com.dius.coffee.model.OrderRepository
 
 @RestController
-class OrderEndpoints {
+@RequestMapping("/order")
+class OrderEndpoints(val repo: OrderRepository) {
 
-  @GetMapping("/order")
+  @GetMapping
   fun listOrders() =
-    ListOrdersResponse()
+    ListOrdersResponse.from(repo.findAll())
 
-  @PostMapping("/order")
+  @PostMapping
   fun createOrder() =
-    CreateOrderResponse()
+    ResponseEntity(
+      CreateOrderResponse(
+        repo.save(CoffeeOrder()).number
+      ),
+      HttpStatus.CREATED
+    )
 
-  @GetMapping("/order/{orderId}")
-  fun getOrder(@PathVariable orderId: String) =
-    GetOrderResponse()
+  @GetMapping("/{orderId}")
+  fun getOrder(@PathVariable orderId: Long): ResponseEntity<Any> {
+    val order = repo.findOneByNumber(orderId)
+    return when (order) {
+      null -> ResponseEntity.notFound().build()
+      else -> ResponseEntity(GetOrderResponse.from(order), HttpStatus.OK)
+    }
+  }
 
-  @PatchMapping("/order/{orderId}")
-  fun updateOrder(@PathVariable orderId: String, @RequestBody request: UpdateOrderRequest) =
-    UpdateOrderResponse()
+  @PatchMapping("/{orderId}")
+  fun updateOrder(@PathVariable orderId: Long, @RequestBody request: UpdateOrderRequest) =
+    UpdateOrderResponse(orderId)
 
-  @DeleteMapping("/order/{orderId}")
-  fun cancelOrder(@PathVariable orderId: String) =
-    CancelOrderResponse()
+  @DeleteMapping("/{orderId}")
+  fun cancelOrder(@PathVariable orderId: Long): ResponseEntity<Any> {
+    val orders = repo.deleteByNumber(orderId)
+    return when (orders.size) {
+      0 -> ResponseEntity.notFound().build()
+      else -> ResponseEntity(CancelOrderResponse(orders[0].number), HttpStatus.NO_CONTENT)
+    }
+  }
 
 }

@@ -1,5 +1,6 @@
-package au.dius.com.coffee.dto
+package au.com.dius.coffee.dto
 
-class CancelOrderResponse {
-
-}
+data class CancelOrderResponse(
+  val id: Long,
+  val path: String = "/order/${id}"
+)

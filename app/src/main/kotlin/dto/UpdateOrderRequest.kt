@@ -1,5 +1,5 @@
-package au.dius.com.coffee.dto
+package au.com.dius.coffee.dto
 
-class UpdateOrderRequest {
-
-}
+data class UpdateOrderRequest(
+  val id: Long
+)

@@ -29,17 +29,22 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 springBoot {
-  mainClass = 'au.dius.com.coffee.ApplicationKt'
+  mainClass = 'au.com.dius.coffee.ApplicationKt'
 }
 
 dependencies {
   compile "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+  compile "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}"
 
   compile 'org.springframework.boot:spring-boot-starter-web', {
     exclude module: 'spring-boot-starter-tomcat'
   }
-  compile 'org.springframework.boot:spring-boot-starter-jetty'
-  compile 'org.springframework.boot:spring-boot-starter-actuator'
+  for (def starter in ['jetty', 'actuator', 'data-jpa', 'jdbc']) {
+    compile "org.springframework.boot:spring-boot-starter-${starter}"
+  }
+
+  compile 'com.h2database:h2'
+  compile 'com.fasterxml.jackson.module:jackson-module-kotlin'
 
   testCompile 'junit:junit'
   testCompile "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}"
