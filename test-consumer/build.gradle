@@ -1,0 +1,30 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE'
+  }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'application'
+
+repositories {
+  mavenCentral()
+}
+
+mainClassName = 'au.com.dius.coffee.Consumer'
+
+dependencies {
+  compile 'org.codehaus.groovy:groovy-all:2.4.8'
+  compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+
+  testCompile 'cglib:cglib-nodep:3.2.4'
+  testCompile 'org.spockframework:spock-core:1.0-groovy-2.4', {
+    exclude group: 'org.codehaus.groovy'
+  }
+  testCompile 'au.com.dius:pact-jvm-consumer-groovy_2.11:3.3.7'
+
+  test { systemProperties['pact.rootDir'] = "$buildDir/pacts" }
+}
