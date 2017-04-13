@@ -49,6 +49,36 @@ class ClientPactSpec extends Specification {
     ]
   }
 
+  def 'lists many orders'() {
+    given:
+    provider {
+      given 'many orders'
+
+      uponReceiving 'request to list orders'
+      withAttributes path: '/order'
+
+      willRespondWith status: 200
+      withBody {
+        orders minLike(3, 7) {
+          id integer(29)
+          path ~"/order/\\d+", '/order/29'
+        }
+      }
+    }
+
+    when:
+    def result
+    VerificationResult pactResult = provider.run {
+      result = client.listOrders().data
+    }
+
+    then:
+    pactResult == PactVerified$.MODULE$
+    for (def order in result.orders) {
+      order.path == "/order/${order.id}".toString()
+    }
+  }
+
   def 'adds a coffee'() {
     given:
     provider {
@@ -110,6 +140,28 @@ class ClientPactSpec extends Specification {
       id: 19,
       path: '/order/19'
     ]
+  }
+
+  def 'cancels an order'() {
+    given:
+    provider {
+      given 'empty order 19'
+
+      uponReceiving 'request to cancel the order'
+      withAttributes method: 'delete', path: '/order/19'
+
+      willRespondWith status: 204
+    }
+    client.orderId = 19
+
+    when:
+    def result
+    VerificationResult pactResult = provider.run {
+      client.cancelOrder()
+    }
+
+    then:
+    pactResult == PactVerified$.MODULE$
   }
 
 }

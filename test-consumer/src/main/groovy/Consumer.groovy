@@ -4,7 +4,8 @@ println ''
 new Client('http://localhost:8080').with {
   [
     'create order': { createOrder() },
-    'set name':     { updateOrder(name: 'Boris') }
+    'set name':     { updateOrder(name: 'Boris') },
+    'cancel order': { cancelOrder() }
   ].forEach { label, func ->
     def response = func()
     if (!response.success) {

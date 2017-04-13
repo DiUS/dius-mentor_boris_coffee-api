@@ -28,16 +28,25 @@ class Client {
     response
   }
 
+  def updateOrder(Map args) {
+    http.patch(path: "/order/${orderId}", body: args)
+  }
+
+  def cancelOrder() {
+    def response = http.delete(path: "/order/${orderId}")
+    if (response.success) {
+      orderId = null
+      coffeeId = null
+    }
+    response
+  }
+
   def addCoffee(String type) {
     def response = http.post(path: "/order/${orderId}", body: [ type: type ])
     if (response.success) {
       coffeeId = response.data.id
     }
     response
-  }
-
-  def updateOrder(Map args) {
-    http.patch(path: "/order/${orderId}", body: args)
   }
 
 }
