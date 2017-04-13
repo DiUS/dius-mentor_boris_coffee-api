@@ -13,8 +13,8 @@ open class Application {
 
   @Bean
   open fun test(repo: OrderRepository) = CommandLineRunner {
-    repo.save(CoffeeOrder(number=1, name="Boris"))
-    repo.save(CoffeeOrder(number=2, name="Delete Me"))
+    repo.save(CoffeeOrder(name="Boris"))
+    repo.save(CoffeeOrder(name="Delete Me"))
   }
 
 }

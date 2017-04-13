@@ -12,7 +12,7 @@ class Client {
   Client() { }
 
   Client(String url) {
-    http = new RESTClient(url)
+    http = new RESTClient(url, 'application/json')
     http.handler.failure = { resp, data -> resp }
   }
 
@@ -29,11 +29,7 @@ class Client {
   }
 
   def addCoffee(String type) {
-    def response = http.post(
-      path: "/order/${orderId}",
-      requestContentType: 'application/json',
-      body: [ type: type ]
-    )
+    def response = http.post(path: "/order/${orderId}", body: [ type: type ])
     if (response.success) {
       coffeeId = response.data.id
     }
@@ -41,11 +37,7 @@ class Client {
   }
 
   def updateOrder(Map args) {
-    def response = http.put(path: "/order/${orderId}/coffee/${coffeeId}", body: args)
-    if (response.success) {
-      coffeeId = response.data.id
-    }
-    response
+    http.patch(path: "/order/${orderId}", body: args)
   }
 
 }

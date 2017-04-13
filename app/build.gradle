@@ -5,6 +5,7 @@ buildscript {
 
   repositories {
     mavenCentral()
+    maven { url 'https://plugins.gradle.org/m2/' }
   }
   dependencies {
     classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE'
@@ -13,8 +14,10 @@ buildscript {
 
 plugins {
   id 'org.jetbrains.kotlin.jvm' version '1.1.1'
+  id 'au.com.dius.pact' version '3.3.7'
+  id 'com.wiredforcode.spawn' version '0.8.2'
+  id 'org.springframework.boot' version '1.5.2.RELEASE'
 }
-apply plugin: 'org.springframework.boot'
 
 jar {
   baseName = 'dius-mentor_boris_coffee-api'
@@ -49,4 +52,27 @@ dependencies {
   testCompile 'junit:junit'
   testCompile "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}"
   testCompile 'org.springframework.boot:spring-boot-starter-test'
+}
+
+import com.wiredforcode.gradle.spawn.*
+task startProvider(type: SpawnProcessTask, dependsOn: 'assemble') {
+  command "java -Dspring.profiles.active=test -jar ${jar.archivePath}"
+  ready 'Started ApplicationKt'
+}
+task stopProvider(type: KillProcessTask) { }
+
+pact {
+  serviceProviders {
+    'Coffee Ordering Provider' {
+      port = 8080
+
+      startProviderTask = startProvider
+      terminateProviderTask = stopProvider
+      stateChangeUrl = url('http://localhost:8080/pactStateChange')
+
+      hasPactsWith('Coffee Ordering Consumers') {
+        pactFileLocation = file("$buildDir/pacts")
+      }
+    }
+  }
 }

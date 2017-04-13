@@ -26,8 +26,10 @@ class ClientPactSpec extends Specification {
     given:
     provider {
       given 'no orders'
+
       uponReceiving 'request to list orders'
       withAttributes path: '/order'
+
       willRespondWith status: 200
       withBody {
         orders([])
@@ -44,6 +46,69 @@ class ClientPactSpec extends Specification {
     pactResult == PactVerified$.MODULE$
     result == [
       orders: []
+    ]
+  }
+
+  def 'adds a coffee'() {
+    given:
+    provider {
+      given 'empty order 19'
+
+      uponReceiving 'request to add a latte'
+      withAttributes method: 'post', path: '/order/19'
+      withBody {
+        type 'Cafe Latte'
+      }
+
+      willRespondWith status: 201
+      withBody {
+        id integer(37)
+        path ~"/order/\\d+/coffee/\\d+", '/order/19/coffee/37'
+      }
+    }
+    client.orderId = 19
+
+    when:
+    def result
+    VerificationResult pactResult = provider.run {
+      result = client.addCoffee('Cafe Latte').data
+    }
+
+    then:
+    pactResult == PactVerified$.MODULE$
+    result.path == "/order/19/coffee/${result.id}".toString()
+  }
+
+  def 'names an order'() {
+    given:
+    provider {
+      given 'empty order 19'
+
+      uponReceiving 'request to change order name'
+      withAttributes method: 'patch', path: '/order/19'
+      withBody {
+        name 'Jimbo'
+      }
+
+      willRespondWith status: 200
+      withBody {
+        id 19
+        path '/order/19'
+      }
+    }
+    client.orderId = 19
+
+    when:
+    def result
+    VerificationResult pactResult = provider.run {
+      result = client.updateOrder(name: 'Jimbo').data
+    }
+
+    then:
+    pactResult == PactVerified$.MODULE$
+    result == [
+      id: 19,
+      path: '/order/19'
     ]
   }
 
