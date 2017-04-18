@@ -27,8 +27,8 @@ class OrderEndpoints(repo: OrderRepository, env: Environment) {
   @PostMapping
   fun createOrder() =
     ResponseEntity(
-      CreateOrderResponse(
-        service.save(CoffeeOrder()).number
+      CreateOrderResponse.from(
+        service.save(CoffeeOrder())
       ),
       HttpStatus.CREATED
     )
@@ -67,7 +67,7 @@ class OrderEndpoints(repo: OrderRepository, env: Environment) {
     val order = service.deleteByNumber(orderId)
     return when (order) {
       null -> ResponseEntity.notFound().build()
-      else -> ResponseEntity(CancelOrderResponse(order.number), HttpStatus.NO_CONTENT)
+      else -> ResponseEntity(CancelOrderResponse.from(order), HttpStatus.NO_CONTENT)
     }
   }
 

@@ -28,6 +28,7 @@ class Client {
     response
   }
 
+  /** Valid args for API are: name */
   def updateOrder(Map args) {
     http.patch(path: "/order/${orderId}", body: args)
   }
@@ -41,8 +42,9 @@ class Client {
     response
   }
 
-  def addCoffee(String type) {
-    def response = http.post(path: "/order/${orderId}", body: [ type: type ])
+  /** Valid args for API are: style (mandatory), size */
+  def addCoffee(Map args) {
+    def response = http.post(path: "/order/${orderId}/coffee", body: args)
     if (response.success) {
       coffeeId = response.data.id
     }

@@ -38,11 +38,7 @@ class OrderService(val repo: OrderRepository, env: Environment) {
     if (isTest) {
       StubOrderRepo.deleteByNumber
     } else {
-      val orders = repo.deleteByNumber(number)
-      when (orders.size) {
-        0 -> null
-        else -> orders[0]
-      }
+      repo.deleteByNumber(number).firstOrNull()
     }
 
 }

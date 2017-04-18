@@ -36,7 +36,7 @@ class ClientSpec extends Specification {
     client.orderId = 3
 
     when:
-    def result = client.addCoffee('Cappuccino').data
+    def result = client.addCoffee(style: 'Cappuccino').data
 
     then:
     1 * mockHttp.post(_) >> [ data: json, success: true ]

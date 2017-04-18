@@ -11,7 +11,7 @@ import au.com.dius.coffee.dto.UpdateOrderRequest
 @Entity
 class CoffeeOrder(
   @Id @GeneratedValue(strategy=IDENTITY) var number: Long = 0,
-  @OneToMany(mappedBy="number") var coffees: List<Coffee> = emptyList(),
+  @OneToMany(mappedBy="number") var coffees: MutableList<Coffee> = mutableListOf(),
   var name: String = ""
 ) {
 

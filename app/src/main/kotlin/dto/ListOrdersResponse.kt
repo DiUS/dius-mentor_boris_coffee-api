@@ -8,13 +8,25 @@ data class ListOrdersResponse(
 
   data class ShortOrder(
     val id: Long,
-    val path: String = "/order/${id}"
-  )
+    val path: String
+  ) {
+
+    companion object {
+
+      fun from(order: CoffeeOrder) =
+        ShortOrder(
+          id=order.number,
+          path="/order/${order.number}"
+        )
+
+    }
+
+  }
 
   companion object {
 
     fun from(orderEntities: Iterable<CoffeeOrder>) =
-      ListOrdersResponse(orderEntities.map { ShortOrder(it.number) })
+      ListOrdersResponse(orderEntities.map { ShortOrder.from(it) })
 
   }
 

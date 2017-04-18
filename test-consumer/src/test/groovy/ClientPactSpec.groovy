@@ -79,36 +79,6 @@ class ClientPactSpec extends Specification {
     }
   }
 
-  def 'adds a coffee'() {
-    given:
-    provider {
-      given 'empty order 19'
-
-      uponReceiving 'request to add a latte'
-      withAttributes method: 'post', path: '/order/19'
-      withBody {
-        type 'Cafe Latte'
-      }
-
-      willRespondWith status: 201
-      withBody {
-        id integer(37)
-        path ~"/order/\\d+/coffee/\\d+", '/order/19/coffee/37'
-      }
-    }
-    client.orderId = 19
-
-    when:
-    def result
-    VerificationResult pactResult = provider.run {
-      result = client.addCoffee('Cafe Latte').data
-    }
-
-    then:
-    pactResult == PactVerified$.MODULE$
-    result.path == "/order/19/coffee/${result.id}".toString()
-  }
-
   def 'names an order'() {
     given:
     provider {
@@ -162,6 +132,36 @@ class ClientPactSpec extends Specification {
 
     then:
     pactResult == PactVerified$.MODULE$
+  }
+
+  def 'adds a coffee'() {
+    given:
+    provider {
+      given 'empty order 19'
+
+      uponReceiving 'request to add a latte'
+      withAttributes method: 'post', path: '/order/19/coffee'
+      withBody {
+        style 'Magic'
+      }
+
+      willRespondWith status: 201
+      withBody {
+        id integer(37)
+        path ~"/order/\\d+/coffee/\\d+", '/order/19/coffee/37'
+      }
+    }
+    client.orderId = 19
+
+    when:
+    def result
+    VerificationResult pactResult = provider.run {
+      result = client.addCoffee(style: 'Magic').data
+    }
+
+    then:
+    pactResult == PactVerified$.MODULE$
+    result.path == "/order/19/coffee/${result.id}".toString()
   }
 
 }

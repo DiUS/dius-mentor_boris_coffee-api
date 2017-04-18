@@ -4,6 +4,7 @@ println ''
 new Client('http://localhost:8080').with {
   [
     'create order': { createOrder() },
+    'add latte':    { addCoffee(style: 'Latte') },
     'set name':     { updateOrder(name: 'Boris') },
     'cancel order': { cancelOrder() }
   ].forEach { label, func ->

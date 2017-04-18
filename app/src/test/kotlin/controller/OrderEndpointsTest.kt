@@ -10,13 +10,13 @@ import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.Matchers.greaterThan
 import org.hamcrest.Matchers.hasSize
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -67,9 +67,6 @@ class OrderEndpointsTest {
 
   fun post(path: String) =
     perform(MockMvcRequestBuilders.post(path))
-
-  fun put(path: String) =
-    perform(MockMvcRequestBuilders.put(path))
 
   fun delete(path: String) =
     perform(MockMvcRequestBuilders.delete(path))
