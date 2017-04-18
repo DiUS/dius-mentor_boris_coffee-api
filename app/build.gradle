@@ -17,6 +17,7 @@ plugins {
   id 'au.com.dius.pact' version '3.3.7'
   id 'com.wiredforcode.spawn' version '0.8.2'
   id 'org.springframework.boot' version '1.5.2.RELEASE'
+  id 'com.palantir.jacoco-coverage' version '0.4.0'
 }
 
 jar {
