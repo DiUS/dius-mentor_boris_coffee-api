@@ -25,6 +25,8 @@ class StateChangeController {
 
   private fun `no orders`() {
     StubOrderRepo.findAll = emptyList()
+    StubOrderRepo.findOneByNumber = null
+    StubOrderRepo.deleteByNumber = null
   }
 
   private fun `many orders`() {

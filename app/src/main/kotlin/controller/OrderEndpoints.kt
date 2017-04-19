@@ -37,8 +37,11 @@ class OrderEndpoints(repo: OrderRepository, env: Environment) {
   fun getOrder(@PathVariable orderId: Long): ResponseEntity<Any> {
     val order = service.findOneByNumber(orderId)
     return when (order) {
-      null -> ResponseEntity.notFound().build()
-      else -> ResponseEntity(GetOrderResponse.from(order), HttpStatus.OK)
+      null -> orderNotFound(orderId)
+      else -> ResponseEntity(
+        GetOrderResponse.from(order),
+        HttpStatus.OK
+      )
     }
   }
 
@@ -46,7 +49,7 @@ class OrderEndpoints(repo: OrderRepository, env: Environment) {
   fun updateOrder(@PathVariable orderId: Long, @RequestBody request: UpdateOrderRequest): ResponseEntity<Any> {
     val order = service.findOneByNumber(orderId)
     return when (order) {
-      null -> ResponseEntity.notFound().build()
+      null -> orderNotFound(orderId)
       else -> {
         try {
           return ResponseEntity(
@@ -66,9 +69,19 @@ class OrderEndpoints(repo: OrderRepository, env: Environment) {
   fun cancelOrder(@PathVariable orderId: Long): ResponseEntity<Any> {
     val order = service.deleteByNumber(orderId)
     return when (order) {
-      null -> ResponseEntity.notFound().build()
+      null -> orderNotFound(orderId)
       else -> ResponseEntity(CancelOrderResponse.from(order), HttpStatus.NO_CONTENT)
     }
+  }
+
+  companion object {
+
+    fun orderNotFound(orderId: Long): ResponseEntity<Any> =
+      ResponseEntity(
+        RejectionResponse.fromOrder("Order with id ${orderId} not found", orderId),
+        HttpStatus.NOT_FOUND
+      )
+
   }
 
 }

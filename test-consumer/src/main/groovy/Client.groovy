@@ -13,7 +13,10 @@ class Client {
 
   Client(String url) {
     http = new RESTClient(url, 'application/json')
-    http.handler.failure = { resp, data -> resp }
+    http.handler.failure = { resp, data ->
+      resp.data = data
+      resp
+    }
   }
 
   def listOrders() {

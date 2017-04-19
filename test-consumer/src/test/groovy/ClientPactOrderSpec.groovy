@@ -7,7 +7,7 @@ import au.com.dius.pact.consumer.VerificationResult
 import au.com.dius.pact.consumer.groovy.PactBuilder
 import spock.lang.Specification
 
-class ClientPactSpec extends Specification {
+class ClientPactOrderSPec extends Specification {
 
   private Client client
   private PactBuilder provider
@@ -112,6 +112,39 @@ class ClientPactSpec extends Specification {
     ]
   }
 
+  def 'fails to name an order'() {
+    given:
+    provider {
+      given 'no orders'
+
+      uponReceiving 'request to change order name'
+      withAttributes method: 'patch', path: '/order/777'
+      withBody {
+        name 'No Face'
+      }
+
+      willRespondWith status: 404
+      withBody {
+        message 'Order with id 777 not found'
+        path '/order/777'
+      }
+    }
+    client.orderId = 777
+
+    when:
+    def result
+    VerificationResult pactResult = provider.run {
+      result = client.updateOrder(name: 'No Face').data
+    }
+
+    then:
+    pactResult == PactVerified$.MODULE$
+    result == [
+      message: 'Order with id 777 not found',
+      path: '/order/777'
+    ]
+  }
+
   def 'cancels an order'() {
     given:
     provider {
@@ -132,36 +165,6 @@ class ClientPactSpec extends Specification {
 
     then:
     pactResult == PactVerified$.MODULE$
-  }
-
-  def 'adds a coffee'() {
-    given:
-    provider {
-      given 'empty order 19'
-
-      uponReceiving 'request to add a latte'
-      withAttributes method: 'post', path: '/order/19/coffee'
-      withBody {
-        style 'Magic'
-      }
-
-      willRespondWith status: 201
-      withBody {
-        id integer(37)
-        path ~"/order/\\d+/coffee/\\d+", '/order/19/coffee/37'
-      }
-    }
-    client.orderId = 19
-
-    when:
-    def result
-    VerificationResult pactResult = provider.run {
-      result = client.addCoffee(style: 'Magic').data
-    }
-
-    then:
-    pactResult == PactVerified$.MODULE$
-    result.path == "/order/19/coffee/${result.id}".toString()
   }
 
 }
