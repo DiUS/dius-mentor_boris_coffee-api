@@ -23,6 +23,10 @@ class Client {
     http.get(path: '/order')
   }
 
+  def getOrder() {
+    http.get(path: "/order/${orderId}")
+  }
+
   def createOrder() {
     def response = http.post(path: '/order')
     if (response.success) {

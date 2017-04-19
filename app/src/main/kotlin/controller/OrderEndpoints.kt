@@ -50,18 +50,12 @@ class OrderEndpoints(repo: OrderRepository, env: Environment) {
     val order = service.findOneByNumber(orderId)
     return when (order) {
       null -> orderNotFound(orderId)
-      else -> {
-        try {
-          return ResponseEntity(
-            UpdateOrderResponse.from(
-              service.save(order.patch(request))
-            ),
-            HttpStatus.OK
-          )
-        } catch (e: IllegalArgumentException) {
-          return ResponseEntity.badRequest().build()
-        }
-      }
+      else -> ResponseEntity(
+        UpdateOrderResponse.from(
+          service.save(order.patch(request))
+        ),
+        HttpStatus.OK
+      )
     }
   }
 

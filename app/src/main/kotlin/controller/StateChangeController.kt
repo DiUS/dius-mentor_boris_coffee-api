@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
+import au.com.dius.coffee.model.Coffee
 import au.com.dius.coffee.model.CoffeeOrder
 import au.com.dius.coffee.service.StubOrderRepo
 
@@ -18,6 +19,7 @@ class StateChangeController {
       "no orders" -> `no orders`()
       "many orders" -> `many orders`()
       "empty order 19" -> `empty order 19`()
+      "order 23" -> `order 23`()
     }
 
     return ResponseEntity.ok().build()
@@ -43,6 +45,18 @@ class StateChangeController {
 
   private fun `empty order 19`() {
     val order = CoffeeOrder(number=19)
+    StubOrderRepo.findOneByNumber = order
+    StubOrderRepo.deleteByNumber = order
+  }
+
+  private fun `order 23`() {
+    val order = CoffeeOrder(number=23)
+    with(order) {
+      name = "Jimothy"
+      for (id in 66L..67L) {
+        coffees.add(Coffee(number=id))
+      }
+    }
     StubOrderRepo.findOneByNumber = order
     StubOrderRepo.deleteByNumber = order
   }

@@ -7,7 +7,7 @@ import au.com.dius.pact.consumer.VerificationResult
 import au.com.dius.pact.consumer.groovy.PactBuilder
 import spock.lang.Specification
 
-class ClientPactOrderSPec extends Specification {
+class ClientPactOrderSpec extends Specification {
 
   private Client client
   private PactBuilder provider
@@ -77,6 +77,75 @@ class ClientPactOrderSPec extends Specification {
     for (def order in result.orders) {
       order.path == "/order/${order.id}".toString()
     }
+  }
+
+  def 'gets one order'() {
+    given:
+    provider {
+      given 'order 23'
+
+      uponReceiving 'request to get a specific order'
+      withAttributes path: '/order/23'
+
+      willRespondWith status: 200
+      withBody {
+        id 23
+        coffees minLike(2, 2) {
+          id integer(66)
+        }
+        name ~/\w+/, 'Jimothy'
+        path '/order/23'
+      }
+    }
+    client.orderId = 23
+
+    when:
+    def result
+    VerificationResult pactResult = provider.run {
+      result = client.getOrder().data
+    }
+
+    then:
+    pactResult == PactVerified$.MODULE$
+    result.with {
+      id == 23
+      name == 'Jimothy'
+      coffees.size() >= 2
+      for (coffee in coffees) {
+        coffee.id == 66
+      }
+      path == '/order/23'
+    }
+  }
+
+  def 'fails to get one order'() {
+    given:
+    provider {
+      given 'no orders'
+
+      uponReceiving 'request to get a specific order'
+      withAttributes path: '/order/999'
+
+      willRespondWith status: 404
+      withBody {
+        message 'Order with id 999 not found'
+        path '/order/999'
+      }
+    }
+    client.orderId = 999
+
+    when:
+    def result
+    VerificationResult pactResult = provider.run {
+      result = client.getOrder().data
+    }
+
+    then:
+    pactResult == PactVerified$.MODULE$
+    result == [
+      message: 'Order with id 999 not found',
+      path: '/order/999'
+    ]
   }
 
   def 'names an order'() {
@@ -158,13 +227,42 @@ class ClientPactOrderSPec extends Specification {
     client.orderId = 19
 
     when:
-    def result
     VerificationResult pactResult = provider.run {
       client.cancelOrder()
     }
 
     then:
     pactResult == PactVerified$.MODULE$
+  }
+
+  def 'fails to cancel an order'() {
+    given:
+    provider {
+      given 'no orders'
+
+      uponReceiving 'request to cancel the order'
+      withAttributes method: 'delete', path: '/order/13'
+
+      willRespondWith status: 404
+      withBody {
+        message 'Order with id 13 not found'
+        path '/order/13'
+      }
+    }
+    client.orderId = 13
+
+    when:
+    def result
+    VerificationResult pactResult = provider.run {
+      result = client.cancelOrder().data
+    }
+
+    then:
+    pactResult == PactVerified$.MODULE$
+    result == [
+      message: 'Order with id 13 not found',
+      path: '/order/13'
+    ]
   }
 
 }
