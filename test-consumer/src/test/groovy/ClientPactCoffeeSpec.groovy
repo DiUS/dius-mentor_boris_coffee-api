@@ -153,4 +153,70 @@ class ClientPactCoffeeSpec extends Specification {
     ]
   }
 
+  def 'updates a coffee'() {
+    given:
+    provider {
+      given 'order 43 with coffee 59'
+
+      uponReceiving 'request to change coffee style and size'
+      withAttributes method: 'patch', path: '/order/43/coffee/59'
+      withBody {
+        style 'Latte'
+        size 'Piccolo'
+      }
+
+      willRespondWith status: 200
+      withBody {
+        id integer(59)
+        path ~"/order/\\d+/coffee/\\d+", '/order/43/coffee/59'
+      }
+    }
+    client.orderId = 43
+    client.coffeeId = 59
+
+    when:
+    def result
+    VerificationResult pactResult = provider.run {
+      result = client.updateCoffee(style: 'Latte', size: 'Piccolo').data
+    }
+
+    then:
+    pactResult == PactVerified$.MODULE$
+    result == [
+      id: 59,
+      path: '/order/43/coffee/59'
+    ]
+  }
+
+  def 'cancels a coffee'() {
+    given:
+    provider {
+      given 'order 43 with coffee 59'
+
+      uponReceiving 'request to cancel coffee'
+      withAttributes method: 'delete', path: '/order/43/coffee/59'
+
+      willRespondWith status: 200
+      withBody {
+        id integer(59)
+        path ~"/order/\\d+/coffee/\\d+", '/order/43/coffee/59'
+      }
+    }
+    client.orderId = 43
+    client.coffeeId = 59
+
+    when:
+    def result
+    VerificationResult pactResult = provider.run {
+      result = client.cancelCoffee().data
+    }
+
+    then:
+    pactResult == PactVerified$.MODULE$
+    result == [
+      id: 59,
+      path: '/order/43/coffee/59'
+    ]
+  }
+
 }

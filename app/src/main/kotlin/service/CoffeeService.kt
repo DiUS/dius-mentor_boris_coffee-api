@@ -27,4 +27,11 @@ class CoffeeService(val repo: CoffeeRepository, env: Environment) {
       repo.findOneByNumber(number)
     }
 
+  fun deleteByNumber(number: Long): Coffee? =
+    if (isTest) {
+      StubCoffeeRepo.deleteByNumber
+    } else {
+      repo.deleteByNumber(number).firstOrNull()
+    }
+
 }

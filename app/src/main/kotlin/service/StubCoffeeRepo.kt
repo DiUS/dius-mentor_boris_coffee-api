@@ -7,6 +7,7 @@ class StubCoffeeRepo {
   companion object {
 
     var findOneByNumber: Coffee? = null
+    var deleteByNumber: Coffee? = null
 
   }
 

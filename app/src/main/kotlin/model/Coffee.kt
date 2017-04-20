@@ -6,7 +6,7 @@ import javax.persistence.GenerationType.IDENTITY
 @Entity
 class Coffee(
   @Id @GeneratedValue(strategy=IDENTITY) var number: Long = 0,
-  @ManyToOne @JoinColumn(name="order_number") var parent: CoffeeOrder? = null,
+  @ManyToOne @JoinColumn(name="order_number") var parent: CoffeeOrder = CoffeeOrder(),
   var style: CoffeeStyle = CoffeeStyle.MAGIC,
   var size: CoffeeSize = CoffeeSize.REGULAR
 ) {

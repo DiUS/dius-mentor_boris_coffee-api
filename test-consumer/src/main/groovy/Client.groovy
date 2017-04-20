@@ -58,6 +58,11 @@ class Client {
     response
   }
 
+  /** Valid args for API are: style, size */
+  def updateCoffee(Map args) {
+    http.patch(path: "/order/${orderId}/coffee/${coffeeId}", body: args)
+  }
+
   def cancelCoffee() {
     def response = http.delete(path: "/order/${orderId}/coffee/${coffeeId}")
     if (response.success) {

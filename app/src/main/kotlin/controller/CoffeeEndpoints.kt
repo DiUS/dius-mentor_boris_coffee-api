@@ -42,7 +42,7 @@ class CoffeeEndpoints(orderRepo: OrderRepository, repo: CoffeeRepository, env: E
     )
   }
 
-  @PatchMapping
+  @PatchMapping("/{coffeeId}")
   fun updateCoffee(
     @PathVariable orderId: Long,
     @PathVariable coffeeId: Long,
@@ -71,6 +71,16 @@ class CoffeeEndpoints(orderRepo: OrderRepository, repo: CoffeeRepository, env: E
       ),
       HttpStatus.OK
     )
+  }
+
+  @DeleteMapping("/{coffeeId}")
+  fun cancelCoffee(@PathVariable orderId: Long, @PathVariable coffeeId: Long): ResponseEntity<Any> {
+    val order = orderService.findOneByNumber(orderId) ?: return OrderEndpoints.orderNotFound(orderId)
+    val coffee = service.deleteByNumber(coffeeId)
+    return when (coffee) {
+      null -> coffeeNotFound(coffeeId, orderId)
+      else -> ResponseEntity(CancelCoffeeResponse.from(coffee, coffee.parent.number), HttpStatus.OK)
+    }
   }
 
   companion object {
