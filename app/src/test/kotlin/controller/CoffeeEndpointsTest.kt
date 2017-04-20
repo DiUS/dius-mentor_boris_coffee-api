@@ -11,7 +11,9 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+
+import org.hamcrest.CoreMatchers.equalTo
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -22,6 +24,15 @@ class CoffeeEndpointsTest {
   fun `add valid coffee`() {
     post("/order/1/coffee", """{"style":"Short Macchiatto"}""")
       .andExpect(status().isCreated())
+  }
+
+  @Test
+  fun `add valid coffee to invalid order`() {
+    val coffeeId = 321
+    post("/order/${coffeeId}/coffee", """{"style":"Magic"}""")
+      .andExpect(status().isNotFound())
+      .andExpect(jsonPath("$.path", equalTo("/order/${coffeeId}/coffee")))
+      .andExpect(jsonPath("$.message", equalTo("Order with id ${coffeeId} not found")))
   }
 
   @Test

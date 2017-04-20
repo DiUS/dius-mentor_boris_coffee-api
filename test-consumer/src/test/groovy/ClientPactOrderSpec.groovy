@@ -222,17 +222,26 @@ class ClientPactOrderSpec extends Specification {
       uponReceiving 'request to cancel the order'
       withAttributes method: 'delete', path: '/order/19'
 
-      willRespondWith status: 204
+      willRespondWith status: 200
+      withBody {
+        id 19
+        path '/order/19'
+      }
     }
     client.orderId = 19
 
     when:
+    def result
     VerificationResult pactResult = provider.run {
-      client.cancelOrder()
+      result = client.cancelOrder().data
     }
 
     then:
     pactResult == PactVerified$.MODULE$
+    result == [
+      id: 19,
+      path: '/order/19'
+    ]
   }
 
   def 'fails to cancel an order'() {

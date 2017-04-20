@@ -3,11 +3,12 @@ package au.com.dius.coffee
 println ''
 new Client('http://localhost:8080').with {
   [
-    'create order': { createOrder() },
-    'get order':    { getOrder() },
-    'add latte':    { addCoffee(style: 'Latte') },
-    'set name':     { updateOrder(name: 'Boris') },
-    'cancel order': { cancelOrder() }
+    'create order':        { createOrder() },
+    'add cap':             { addCoffee(style: 'Cappuccino') },
+    'set name':            { updateOrder(name: 'Boris') },
+    'add 3/4 latte':       { addCoffee(style: 'Latte', size: '3/4') },
+    'get order':           { getOrder() },
+    'cancel order':        { cancelOrder() }
   ].forEach { label, func ->
     def response = func()
     if (!response.success) {

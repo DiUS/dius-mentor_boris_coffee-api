@@ -38,10 +38,7 @@ class OrderEndpoints(repo: OrderRepository, env: Environment) {
     val order = service.findOneByNumber(orderId)
     return when (order) {
       null -> orderNotFound(orderId)
-      else -> ResponseEntity(
-        GetOrderResponse.from(order),
-        HttpStatus.OK
-      )
+      else -> ResponseEntity(GetOrderResponse.from(order), HttpStatus.OK)
     }
   }
 
@@ -64,7 +61,7 @@ class OrderEndpoints(repo: OrderRepository, env: Environment) {
     val order = service.deleteByNumber(orderId)
     return when (order) {
       null -> orderNotFound(orderId)
-      else -> ResponseEntity(CancelOrderResponse.from(order), HttpStatus.NO_CONTENT)
+      else -> ResponseEntity(CancelOrderResponse.from(order), HttpStatus.OK)
     }
   }
 

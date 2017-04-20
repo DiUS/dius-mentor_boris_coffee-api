@@ -11,7 +11,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 
 import org.hamcrest.CoreMatchers.equalTo
@@ -47,12 +46,20 @@ class OrderEndpointsTest {
 
   @Test
   fun `delete extant order`() {
-    delete("/order/2").andExpect(status().isNoContent())
+    val orderId = 2
+    delete("/order/${orderId}")
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.id", equalTo(orderId)))
+      .andExpect(jsonPath("$.path", equalTo("/order/${orderId}")))
   }
 
   @Test
   fun `delete non-existent order`() {
-    delete("/order/24601").andExpect(status().isNotFound())
+    val orderId = 321
+    delete("/order/${orderId}")
+      .andExpect(status().isNotFound())
+      .andExpect(jsonPath("$.path", equalTo("/order/${orderId}")))
+      .andExpect(jsonPath("$.message", equalTo("Order with id ${orderId} not found")))
   }
 
   @Autowired lateinit var mvc: MockMvc

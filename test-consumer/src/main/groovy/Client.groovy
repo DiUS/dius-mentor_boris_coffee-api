@@ -58,4 +58,12 @@ class Client {
     response
   }
 
+  def cancelCoffee() {
+    def response = http.delete(path: "/order/${orderId}/coffee/${coffeeId}")
+    if (response.success) {
+      coffeeId = null
+    }
+    response
+  }
+
 }
