@@ -7,8 +7,13 @@ buildscript {
   }
 }
 
+plugins {
+  id 'au.com.dius.pact' version '3.3.7'
+}
 apply plugin: 'groovy'
 apply plugin: 'application'
+
+version = 0
 
 repositories {
   mavenCentral()
@@ -28,3 +33,13 @@ dependencies {
 
   test { systemProperties['pact.rootDir'] = "$buildDir/pacts" }
 }
+
+def props = ['account', 'username', 'password']
+  .inject([:]) { acc, it ->
+    acc << [(it): project.findProperty("pactBroker${it.capitalize()}")]
+  }
+def buildPactUrl(Map args) {
+  "https://${args.username}:${args.password}@${args.account}.pact.dius.com.au"
+}
+
+pact { publish { pactBrokerUrl = buildPactUrl(props) } }

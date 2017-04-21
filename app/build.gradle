@@ -62,6 +62,12 @@ task startProvider(type: SpawnProcessTask, dependsOn: 'assemble') {
 }
 task stopProvider(type: KillProcessTask) { }
 
+
+def props = ['account', 'username', 'password']
+  .inject([:]) { acc, it ->
+    acc << [(it): project.findProperty("pactBroker${it.capitalize()}")]
+  }
+
 pact {
   serviceProviders {
     'Coffee Ordering Provider' {
@@ -71,9 +77,12 @@ pact {
       terminateProviderTask = stopProvider
       stateChangeUrl = url('http://localhost:8080/pactStateChange')
 
-      hasPactsWith('Coffee Ordering Consumers') {
-        pactFileLocation = file("$buildDir/pacts")
-      }
+      //hasPactsWith('Coffee Ordering Consumers') { pactFileLocation = file("$buildDir/pacts") }
+
+      hasPactsFromPactBroker(
+        "https://${props.account}.pact.dius.com.au",
+        authentication: ['Basic', props.username, props.password]
+      )
     }
   }
 }

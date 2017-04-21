@@ -35,11 +35,31 @@ This is the instructions to run Pact verification locally (without a broker).
     - In `/test-consumer`.
     - Run `gradle build` to compile and run tests (unit + Pact).
     - If you want to run just tests again, `gradle check` is your buddy.
-    - Publish the contract (pactfile) for verification (copy `/test-consumer/build/pacts/*.json` to `/app/build/pacts/`)
+    - Publish the contract (pactfile) for verification.
+        - New (broker) way:
+            - Make sure you have the specified `gradle` properties (see below).
+            - Run `gradle pactPublish`. The end, hooray!
+        - Old (local) way:
+            - Uncomment the `hasPactsWith` line in the `build.gradle` before `build`.
+            - Copy `/test-consumer/build/pacts/*.json` to `/app/build/pacts/`.
+            - There's a script to do this now: `publish_local.sh`.
 - Provider
     - In `/app`.
     - Run `gradle build` to compile and run tests (unit + functional).
     - Run `gradle pactVerify --no-daemon` to run Pact tests.
 - Integration
-    - Start the provider (`gradle bootRun` from `/app`).
+    - Start the provider (`gradle bootRun` from `/app`). Or the `java` line above.
     - Run the consumer to exercise the real endpoints (`gradle run` from `/test-consumer`).
+
+Adding credentials to your `gradle.properties`:
+
+- Please never put credentials within a project directory on your filesystem.
+    - Even if they're `.gitignore`d. It's too easy to screw up.
+- Open `~/.gradle/gradle.properties`.
+- Add these:
+    - ```
+      pactBrokerUsername=<user>
+      pactBrokerPassword=<pass>
+      pactBrokerAccount=<acc>
+      ```
+    - Obviously, hit me up for real credentials~*
