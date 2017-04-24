@@ -62,10 +62,10 @@ task startProvider(type: SpawnProcessTask, dependsOn: 'assemble') {
 }
 task stopProvider(type: KillProcessTask) { }
 
-
 def props = ['account', 'username', 'password']
   .inject([:]) { acc, it ->
-    acc << [(it): project.findProperty("pactBroker${it.capitalize()}")]
+    def propName = "pactBroker${it.capitalize()}"
+    acc << [(it): System.env[propName] ?: project.findProperty(propName)]
   }
 
 pact {

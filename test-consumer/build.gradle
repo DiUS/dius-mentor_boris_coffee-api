@@ -36,7 +36,8 @@ dependencies {
 
 def props = ['account', 'username', 'password']
   .inject([:]) { acc, it ->
-    acc << [(it): project.findProperty("pactBroker${it.capitalize()}")]
+    def propName = "pactBroker${it.capitalize()}"
+    acc << [(it): System.env[propName] ?: project.findProperty(propName)]
   }
 def buildPactUrl(Map args) {
   "https://${args.username}:${args.password}@${args.account}.pact.dius.com.au"
