@@ -58,6 +58,10 @@ class Client {
     response
   }
 
+  def getCoffee() {
+    http.get(path: "/order/${orderId}/coffee/${coffeeId}")
+  }
+
   /** Valid args for API are: style, size */
   def updateCoffee(Map args) {
     http.patch(path: "/order/${orderId}/coffee/${coffeeId}", body: args)

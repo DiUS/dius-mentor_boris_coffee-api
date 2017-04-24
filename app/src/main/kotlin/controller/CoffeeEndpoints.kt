@@ -42,6 +42,14 @@ class CoffeeEndpoints(orderRepo: OrderRepository, repo: CoffeeRepository, env: E
     )
   }
 
+  @GetMapping("/{coffeeId}")
+  fun getCoffee(@PathVariable orderId: Long, @PathVariable coffeeId: Long): ResponseEntity<Any> {
+    val order = orderService.findOneByNumber(orderId) ?: return OrderEndpoints.orderNotFound(orderId)
+    val coffee = order.coffees.firstOrNull { it.number == coffeeId } ?: return coffeeNotFound(orderId, coffeeId)
+
+    return ResponseEntity(GetCoffeeResponse.from(coffee), HttpStatus.OK)
+  }
+
   @PatchMapping("/{coffeeId}")
   fun updateCoffee(
     @PathVariable orderId: Long,
@@ -75,7 +83,7 @@ class CoffeeEndpoints(orderRepo: OrderRepository, repo: CoffeeRepository, env: E
 
   @DeleteMapping("/{coffeeId}")
   fun cancelCoffee(@PathVariable orderId: Long, @PathVariable coffeeId: Long): ResponseEntity<Any> {
-    val order = orderService.findOneByNumber(orderId) ?: return OrderEndpoints.orderNotFound(orderId)
+    /*val order =*/ orderService.findOneByNumber(orderId) ?: return OrderEndpoints.orderNotFound(orderId)
     val coffee = service.deleteByNumber(coffeeId)
     return when (coffee) {
       null -> coffeeNotFound(coffeeId, orderId)

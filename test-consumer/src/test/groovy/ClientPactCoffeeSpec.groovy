@@ -22,6 +22,41 @@ class ClientPactCoffeeSpec extends Specification {
     }
   }
 
+  def 'gets a coffee'() {
+    given:
+    provider {
+      given 'order 43 with coffee 59'
+
+      uponReceiving 'request to fetch a coffee'
+      withAttributes method: 'get', path: '/order/43/coffee/59'
+
+      willRespondWith status: 200
+      withBody {
+        id integer(59)
+        style ~/.+/, 'Magic'
+        size ~/.+/, 'Regular'
+        path ~"/order/\\d+/coffee/\\d+", '/order/43/coffee/59'
+      }
+    }
+    client.orderId = 43
+    client.coffeeId = 59
+
+    when:
+    def result
+    VerificationResult pactResult = provider.run {
+      result = client.getCoffee().data
+    }
+
+    then:
+    pactResult == PactVerified$.MODULE$
+    result == [
+      id: 59,
+      style: 'Magic',
+      size: 'Regular',
+      path: '/order/43/coffee/59'
+    ]
+  }
+
   def 'adds a coffee'() {
     given:
     provider {

@@ -5,6 +5,7 @@ new Client('http://localhost:8080').with {
   [
     'create order':        { createOrder() },
     'add cap':             { addCoffee(style: 'Cappuccino') },
+    'get coffee':          { getCoffee() },
     'set name':            { updateOrder(name: 'Boris') },
     'cancel first coffee': { cancelCoffee() },
     'add 3/4 latte':       { addCoffee(style: 'Latte', size: '3/4') },
