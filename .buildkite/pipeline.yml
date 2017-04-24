@@ -1,12 +1,11 @@
-env:
-  BUILDKITE_DOCKER: true
-
 steps:
   - label: "API: Build, unit"
     command: ./api_build.sh
 
   - label: "Test Consumer: build, test, Pact"
     command: ./consumer_build.sh
+
+  - wait
 
   - label: "API: Verify Pact"
     command: ./api_verify.sh
