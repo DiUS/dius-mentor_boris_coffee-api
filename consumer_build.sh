@@ -1,5 +1,5 @@
 #!/bin/bash -eu
 
 pushd test-consumer
-./gradlew build pactPublish
+./gradlew build pactPublish --no-daemon
 popd

@@ -1,5 +1,5 @@
 #!/bin/bash -eu
 
 pushd app
-./gradlew build
+./gradlew build --no-daemon
 popd

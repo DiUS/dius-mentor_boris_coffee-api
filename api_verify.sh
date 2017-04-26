@@ -1,5 +1,5 @@
 #!/bin/bash -eu
 
 pushd app
-./gradlew pactVerify
+./gradlew pactVerify --no-daemon
 popd
