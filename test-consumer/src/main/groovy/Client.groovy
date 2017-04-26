@@ -19,6 +19,14 @@ class Client {
     }
   }
 
+  def getMenuMenu() {
+    http.get(path: '/menu')
+  }
+
+  def getCoffeeMenu() {
+    http.get(path: '/menu/coffee')
+  }
+
   def listOrders() {
     http.get(path: '/order')
   }

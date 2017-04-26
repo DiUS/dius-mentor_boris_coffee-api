@@ -10,7 +10,9 @@ new Client('http://localhost:8080').with {
     'cancel first coffee': { cancelCoffee() },
     'add 3/4 latte':       { addCoffee(style: 'Latte', size: '3/4') },
     'get order':           { getOrder() },
-    'cancel order':        { cancelOrder() }
+    'cancel order':        { cancelOrder() },
+    'menu':                { getMenuMenu() },
+    'coffee menu':         { getCoffeeMenu() }
   ].forEach { label, func ->
     def response = func()
     if (!response.success) {
