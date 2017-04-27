@@ -7,5 +7,6 @@ docker run \
   -e pactBrokerAccount=$pactBrokerAccount \
   -e pactBrokerUsername=$pactBrokerUsername \
   -e pactBrokerPassword=$pactBrokerPassword \
+  -t \
   openjdk:8 \
   ./api_verify.sh
