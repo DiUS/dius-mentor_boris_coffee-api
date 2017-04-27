@@ -1,17 +1,17 @@
 steps:
   - label: "API: Build, unit"
-    command: ./api_build.sh
+    command: ./docker_api_build.sh
     agents:
-      java8: true
+      stack: buildkite
 
   - label: "Test Consumer: build, test, Pact"
-    command: ./consumer_build.sh
+    command: ./docker_consumer_build.sh
     agents:
-      java8: true
+      stack: buildkite
 
   - wait
 
   - label: "API: Verify Pact"
-    command: ./api_verify.sh
+    command: ./docker_api_verify.sh
     agents:
-      java8: true
+      stack: buildkite
