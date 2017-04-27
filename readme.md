@@ -1,5 +1,7 @@
 # Coffee shop ordering API
 
+[![Build status](https://badge.buildkite.com/6484318ee252264a9060c4bd0b59d30c2dfd2fd1d55986ae3e.svg)](https://buildkite.com/dius-3/mentoring-coffee-shop-api)
+
 Spring Boot + Kotlin
 
 ## Getting Started
