@@ -9,7 +9,7 @@ That said, there are still probably heaps of assumptions to be made, incorrectly
 ## High-level components
 
 - Cloudy infrastructure
-- CI/CD pipeline
+- CI/CD pipeline (samples: `boris:.buildkite/pipeline.yml`)
 - API back-end (samples: [boris](https://github.com/DiUS/dius-mentor_boris_coffee-api))
 - (Responsive) web front-end
 - Mobile front-end (samples: [pedro](https://github.com/DiUS/dius-mentor_pedro_coffee-mobile))
