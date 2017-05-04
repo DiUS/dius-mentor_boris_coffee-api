@@ -10,6 +10,7 @@ import au.com.dius.coffee.model.CoffeeOrder
 import au.com.dius.coffee.model.OrderRepository
 import au.com.dius.coffee.service.OrderService
 
+@CrossOrigin
 @RestController
 @RequestMapping("/order")
 class OrderEndpoints(repo: OrderRepository, env: Environment) {
