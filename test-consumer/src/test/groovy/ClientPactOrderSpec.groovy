@@ -62,6 +62,8 @@ class ClientPactOrderSpec extends Specification {
         orders minLike(3, 7) {
           id integer(29)
           path ~"/order/\\d+", '/order/29'
+          name ~/\w*/, 'Kristolomy'
+          coffeeSummaries maxLike(7, 2, 'Large Magic')
         }
       }
     }

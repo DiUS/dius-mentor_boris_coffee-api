@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*
 
 import au.com.dius.coffee.model.Coffee
 import au.com.dius.coffee.model.CoffeeOrder
+import au.com.dius.coffee.model.CoffeeSize
+import au.com.dius.coffee.model.CoffeeStyle
 import au.com.dius.coffee.service.StubOrderRepo
 import au.com.dius.coffee.service.StubCoffeeRepo
 
@@ -43,6 +45,10 @@ class StateChangeController {
       CoffeeOrder(number=19, name="Jack"),
       CoffeeOrder(number=20, name="Boris")
     )
+    StubOrderRepo.findAll.forEach {
+      it.coffees.add(Coffee(3, it, size=CoffeeSize.LARGE))
+      it.coffees.add(Coffee(7, it, style=CoffeeStyle.CAPPUCCINO))
+    }
   }
 
   private fun `empty order 19`() {
