@@ -94,6 +94,8 @@ class ClientPactOrderSpec extends Specification {
         id 23
         coffees minLike(2, 2) {
           id integer(66)
+          summary ~/.+/, 'Flat White'
+          path ~"/order/\\d+/coffee/\\d+", '/order/23/coffee/66'
         }
         name ~/\w+/, 'Jimothy'
         path '/order/23'
@@ -115,6 +117,8 @@ class ClientPactOrderSpec extends Specification {
       coffees.size() >= 2
       for (coffee in coffees) {
         coffee.id == 66
+        coffee.summary == 'Flat White'
+        coffee.path == '/order/23/coffee/66'
       }
       path == '/order/23'
     }

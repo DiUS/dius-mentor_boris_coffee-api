@@ -1,7 +1,7 @@
 package au.com.dius.coffee.dto
 
-import au.com.dius.coffee.model.CoffeeOrder
 import au.com.dius.coffee.model.Coffee
+import au.com.dius.coffee.model.CoffeeOrder
 
 data class ListOrdersResponse(
   val orders: List<ShortOrder>
