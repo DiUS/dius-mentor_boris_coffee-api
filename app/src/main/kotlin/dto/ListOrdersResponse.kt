@@ -2,6 +2,7 @@ package au.com.dius.coffee.dto
 
 import au.com.dius.coffee.model.Coffee
 import au.com.dius.coffee.model.CoffeeOrder
+import au.com.dius.coffee.model.CoffeeSize
 
 data class ListOrdersResponse(
   val orders: List<ShortOrder>
@@ -25,7 +26,13 @@ data class ListOrdersResponse(
         )
 
       fun summaryFrom(coffee: Coffee) =
-        "${coffee.size.displayName} ${coffee.style.displayName}"
+        "${summaryFrom(coffee.size)}${coffee.style.displayName}"
+
+      private fun summaryFrom(size: CoffeeSize) =
+        when (size) {
+          CoffeeSize.REGULAR -> ""
+          else -> "${size.displayName} "
+        }
 
     }
 
