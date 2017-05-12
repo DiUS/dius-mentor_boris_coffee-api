@@ -14,7 +14,7 @@ That said, there are still probably heaps of assumptions to be made, incorrectly
 - (Responsive) web front-end (samples: [boris](https://github.com/DiUS/dius-mentor_boris_coffee-web))
 - Mobile front-end (samples: [pedro](https://github.com/DiUS/dius-mentor_pedro_coffee-mobile))
 - Chatbot back-end
-- Chatbot front-end
+- Chatbot front-end (samples: [pedro](https://github.com/DiUS/dius-mentor_pedro_coffee-chat))
 
 Existing implementation should be deployable, to integrate with.
 Do one bit at a time. With build pipeline. Integrate with other bits, with tests.
