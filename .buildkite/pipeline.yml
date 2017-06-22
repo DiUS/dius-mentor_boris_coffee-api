@@ -2,16 +2,16 @@ steps:
   - label: "API: Build, unit"
     command: ./docker_api_build.sh
     agents:
-      queue: elastic
+      queue: internal
 
   - label: "Test Consumer: build, test, Pact"
     command: ./docker_consumer_build.sh
     agents:
-      queue: elastic
+      queue: internal
 
   - wait
 
   - label: "API: Verify Pact"
     command: ./docker_api_verify.sh
     agents:
-      queue: elastic
+      queue: internal
